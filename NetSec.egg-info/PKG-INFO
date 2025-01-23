@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: NetSec
+Version: 0.0.1
+Author: PG-9-9
+Author-email: vishaals0507@gmail.com
+Requires-Dist: python-dotenv
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: pymongo
+Requires-Dist: certifi
+Requires-Dist: scikit-learn
+Requires-Dist: dill
+Requires-Dist: pyaml
