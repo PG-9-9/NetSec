@@ -1,0 +1,17 @@
+2025-01-28 15:55:39,222 - INFO - Data Ingestion object created
+2025-01-28 15:55:42,985 - INFO - Performed the train test split with the ratio of 0.2
+2025-01-28 15:55:42,986 - INFO - Exited the split_data_into_train_test method
+2025-01-28 15:55:42,986 - INFO - Created the directory Artifacts\01_28_2025_15_55_38\data_ingestion
+2025-01-28 15:55:43,040 - INFO - Exported the train and test data into the directory Artifacts\01_28_2025_15_55_38\data_ingestion
+2025-01-28 15:55:43,043 - INFO - Data Ingestion completed
+2025-01-28 15:55:43,049 - INFO - Data Validation object created
+2025-01-28 15:55:43,088 - INFO - Required Number of columns: 2
+2025-01-28 15:55:43,088 - INFO - Actual Number of columns: 32
+2025-01-28 15:55:43,089 - INFO - Required Number of columns: 2
+2025-01-28 15:55:43,089 - INFO - Actual Number of columns: 32
+2025-01-28 15:55:43,231 - INFO - Data Validation completed
+2025-01-28 15:55:43,231 - INFO - Data Transformation object created
+2025-01-28 15:55:43,231 - INFO - Initiating Data Transformation
+2025-01-28 15:55:43,232 - INFO - Reading the data under data transformation
+2025-01-28 15:55:43,260 - INFO - Creating the data transformation pipeline 
+2025-01-28 15:55:43,260 - INFO - KNNImputer object created
