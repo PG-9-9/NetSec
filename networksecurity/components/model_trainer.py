@@ -22,6 +22,8 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, Gradien
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 
+import mlflow
+
 
 class ModelTrainer:
     def __init__(self, model_trainer_config:ModelTrainerConfig,data_transformation_artifact:DataTransformationArtifact):
@@ -32,6 +34,20 @@ class ModelTrainer:
 
         except Exception as e:
             raise NetworkSecurityException(e,sys)
+
+    def track_mlflow(self,best_model,classification_metric):
+        with mlflow.start_run():
+            f1_score=classification_metric.f1_score
+            precision_score=classification_metric.precision_score
+            recall_score=classification_metric.recall_score
+
+            mlflow.log_metric("F1 Score",f1_score)
+            mlflow.log_metric("Precision Score",precision_score)
+            mlflow.log_metric("Recall Score",recall_score)
+            mlflow.sklearn.log_model(best_model,"Model")
+
+
+
         
     def train_model(self,x_train,y_train,x_test,y_test):
         models={
@@ -80,13 +96,14 @@ class ModelTrainer:
         y_train_pred=best_model.predict(x_train)
         classification_train_metric=get_classification_score(y_true=y_train,y_pred=y_train_pred)
 
-        ## TODO: track the model with MLFLOW
-
         # Get the classification score for the test data
         y_test_pred=best_model.predict(x_test)
         classification_test_metric=get_classification_score(y_true=y_test,y_pred=y_test_pred)
 
-        
+        ## Track the model  experiments with MLFLOW
+        self.track_mlflow(best_model, classification_train_metric)
+        self.track_mlflow(best_model, classification_test_metric)
+
         # Get the preprocessor object for transforming the data
         preprocessor=load_object(self.data_transformation_artifact.transformed_object_file_path)
 
