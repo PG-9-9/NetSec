@@ -82,13 +82,13 @@ class DataTransformation:
             transformed_input_test_feature=preprocessor_object.transform(input_feature_test_df)
 
             ## Save the transformed object
-            train_arr = np.column_stack([transformed_input_train_feature, np.array(target_feature_train_df)])
-            test_arr = np.column_stack([transformed_input_test_feature, np.array(target_feature_test_df)])
+            train_arr = np.c_[transformed_input_train_feature, np.array(target_feature_train_df) ]
+            test_arr = np.c_[ transformed_input_test_feature, np.array(target_feature_test_df) ]
 
 
             save_numpy_array_data(self.data_transformation_config.transformed_train_file_path,train_arr,)
             save_numpy_array_data(self.data_transformation_config.transformed_test_file_path,test_arr,)
-            save_numpy_array_data(self.data_transformation_config.transformed_object_file_path,preprocessor_object,)
+            save_object(self.data_transformation_config.transformed_object_file_path,preprocessor_object,)
 
             # Prepare the artifact
             data_transformation_artifact=DataTransformationArtifact(
