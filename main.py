@@ -25,7 +25,7 @@ if __name__=="__main__":
         data_validation_config=DataValidationConfig(trainingpipelineconfig)
         data_validation=DataValidation(dataingestionartifact,data_validation_config)
         logging.info("Data Validation object created")
-        data_validation_artifact=data_validation.intiate_data_validation()
+        data_validation_artifact=data_validation.initiate_data_validation()
         print(data_validation_artifact)
         logging.info("Data Validation completed")
 
