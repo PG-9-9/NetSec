@@ -23,6 +23,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 
 import mlflow
+import dagshub
+
+# Creates the mlruns in the cloud.
+dagshub.init(repo_owner='PG-9-9', repo_name='NetSec', mlflow=True)
 
 
 class ModelTrainer:
@@ -31,7 +35,6 @@ class ModelTrainer:
             self.model_trainer_config = model_trainer_config
             self.data_transformation_artifact = data_transformation_artifact
         
-
         except Exception as e:
             raise NetworkSecurityException(e,sys)
 
@@ -46,16 +49,13 @@ class ModelTrainer:
             mlflow.log_metric("Recall Score",recall_score)
             mlflow.sklearn.log_model(best_model,"Model")
 
-
-
-        
     def train_model(self,x_train,y_train,x_test,y_test):
         models={
             "Random Forest":RandomForestClassifier(verbose=1),
-            "Decision Tree":DecisionTreeClassifier(),
-            "AdaBoost":AdaBoostClassifier(),
-            "Gradient Boosting":GradientBoostingClassifier(verbose=1),
-            "Logistic Regression":LogisticRegression(verbose=1),
+            # "Decision Tree":DecisionTreeClassifier(),
+            # "AdaBoost":AdaBoostClassifier(),
+            # "Gradient Boosting":GradientBoostingClassifier(verbose=1),
+            # "Logistic Regression":LogisticRegression(verbose=1),
         }
         params={
         
@@ -128,8 +128,6 @@ class ModelTrainer:
 
         return model_trainer_artifact
 
-
-    
     def initiate_model_trainer(self)->ModelTrainerArtifact:
         try:
             logging.info("Initiating Model Training")
