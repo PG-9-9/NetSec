@@ -10,8 +10,21 @@ import os
 import sys
 
 class DataValidation:
+    """
+    Validates data by checking schema compliance, column existence, and performs statistical tests for data drift.
+    """
     def __init__(self,data_ingestion_artifact:DataIngestionArtifact, 
                  data_validation_config:DataValidationConfig):
+        """
+    Initializes the DataValidation class with the provided artifacts and configuration.
+
+    Parameters
+    ----------
+    data_ingestion_artifact : DataIngestionArtifact
+        Artifact containing the ingested data.
+    data_validation_config : DataValidationConfig
+        Configuration for the data validation process.
+        """
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
@@ -22,12 +35,43 @@ class DataValidation:
     # No need to create a object, so make it static
     @staticmethod
     def read_data(file_path:str)->pd.DataFrame:
+        """
+    Reads a CSV file and returns it as a pandas DataFrame.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the CSV file.
+
+    Returns
+    -------
+    pd.DataFrame
+        The loaded DataFrame.
+
+    Raises
+    ------
+    NetworkSecurityException
+        If an error occurs while reading the file.
+    """
         try:
             return pd.read_csv(file_path)
         except Exception as e:
             raise NetworkSecurityException(e,sys)
     
     def validate_number_of_columns(self,dataframe:pd.DataFrame)->bool:
+        """
+    Validates the number of columns in the provided dataframe against the expected schema.
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        The DataFrame to be validated.
+
+    Returns
+    -------
+    bool
+        True if the number of columns is correct, otherwise False.
+    """
         try:
             number_of_columns=len(self.schema_config)#
             logging.info(f"Required Number of columns: {number_of_columns}")
@@ -40,6 +84,19 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
         
     def numerical_columns_exists(self, dataframe: pd.DataFrame) -> bool:
+        """
+    Checks if all numerical columns specified in the schema exist in the provided DataFrame.
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        The DataFrame to check for numerical columns.
+
+    Returns
+    -------
+    bool
+        True if the numerical columns exist, otherwise False.
+    """
         try:
             # Check if 'columns' and 'numerical_columns' exist in the schema
             if 'columns' not in self.schema_config or 'numerical_columns' not in self.schema_config:
@@ -61,6 +118,25 @@ class DataValidation:
 
 
     def detect_dataset_drift(self,base_df, current_df, threshold=0.05)->bool:
+        """
+    Detects data drift between the base and current datasets by comparing distributions.
+
+    Parameters
+    ----------
+    base_df : pd.DataFrame
+        The baseline dataset to compare against.
+    current_df : pd.DataFrame
+        The current dataset to be compared.
+    threshold : float, optional
+        The p-value threshold to determine if drift is present (default is 0.05).
+
+    Returns
+    -------
+    bool
+        True if drift is detected, otherwise False.
+
+    Saves the drift report to the configured file path.
+    """
         try:
             status=True
             report={}
@@ -88,6 +164,19 @@ class DataValidation:
             raise NetworkSecurityException(e,sys)
 
     def initiate_data_validation(self)->DataValidationArtifact:
+        """
+    Initiates the data validation process, validating the number of columns, numerical columns, and detecting drift.
+
+    Returns
+    -------
+    DataValidationArtifact
+        An artifact containing validation status and file paths to the validated data.
+    
+    Raises
+    ------
+    NetworkSecurityException
+        If any validation checks fail.
+    """
         try:
             train_file_path=self.data_ingestion_artifact.trained_file_path
             test_file_path=self.data_ingestion_artifact.testing_file_path

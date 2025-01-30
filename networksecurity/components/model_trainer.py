@@ -30,7 +30,20 @@ dagshub.init(repo_owner='PG-9-9', repo_name='NetSec', mlflow=True)
 
 
 class ModelTrainer:
+    """
+    A class to handle the training of machine learning models and track experiments with MLflow.
+    """
     def __init__(self, model_trainer_config:ModelTrainerConfig,data_transformation_artifact:DataTransformationArtifact):
+        """
+    Initializes the ModelTrainer class with the provided configuration and data transformation artifact.
+
+    Parameters
+    ----------
+    model_trainer_config : ModelTrainerConfig
+        Configuration for the model training process.
+    data_transformation_artifact : DataTransformationArtifact
+        Artifact containing the transformed data for model training.
+    """
         try:
             self.model_trainer_config = model_trainer_config
             self.data_transformation_artifact = data_transformation_artifact
@@ -39,6 +52,16 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
 
     def track_mlflow(self,best_model,classification_metric):
+        """
+    Tracks model training experiments with MLflow, logging metrics and the model.
+
+    Parameters
+    ----------
+    best_model : object
+        The trained model to be logged.
+    classification_metric : object
+        The classification metrics of the model to be logged.
+    """
         with mlflow.start_run():
             f1_score=classification_metric.f1_score
             precision_score=classification_metric.precision_score
@@ -50,6 +73,25 @@ class ModelTrainer:
             mlflow.sklearn.log_model(best_model,"Model")
 
     def train_model(self,x_train,y_train,x_test,y_test):
+        """
+    Trains machine learning models using various algorithms and evaluates them using classification metrics.
+
+    Parameters
+    ----------
+    x_train : pd.DataFrame
+        The feature data for training.
+    y_train : pd.Series
+        The target labels for training.
+    x_test : pd.DataFrame
+        The feature data for testing.
+    y_test : pd.Series
+        The target labels for testing.
+
+    Returns
+    -------
+    ModelTrainerArtifact
+        An artifact containing paths to the trained model and evaluation metrics.
+    """
         models={
             "Random Forest":RandomForestClassifier(verbose=1),
             # "Decision Tree":DecisionTreeClassifier(),
@@ -132,6 +174,20 @@ class ModelTrainer:
         return model_trainer_artifact
 
     def initiate_model_trainer(self)->ModelTrainerArtifact:
+        """
+    Initiates the model training process by loading the transformed training and test data,
+    training the model, and saving the resulting model and metrics.
+
+    Returns
+    -------
+    ModelTrainerArtifact
+        An artifact containing paths to the trained model and evaluation metrics.
+    
+    Raises
+    ------
+    NetworkSecurityException
+        If any error occurs during the model training process.
+    """
         try:
             logging.info("Initiating Model Training")
             

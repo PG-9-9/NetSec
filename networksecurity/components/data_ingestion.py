@@ -21,7 +21,38 @@ load_dotenv()
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
 
 class DataIngestion:
+    """
+    A class to handle the ingestion of data from MongoDB into a pandas DataFrame.
+    
+    Attributes
+    ----------
+    data_ingestion_config : DataIngestionConfig
+        The configuration object for the data ingestion process.
+    
+    Methods
+    -------
+    export_collection_as_dataframe():
+        Exports the MongoDB collection as a pandas DataFrame.
+    
+    export_data_into_feature_store(dataframe: pd.DataFrame):
+        Exports the DataFrame to a feature store.
+    
+    split_data_into_train_test(dataframe: pd.DataFrame):
+        Splits the DataFrame into training and test datasets.
+    
+    initiate_data_ingestion():
+        Starts the data ingestion process and returns the resulting artifact.
+    """
+    
     def __init__(self, data_ingestion_config:DataIngestionConfig):
+        """
+        Initializes the DataIngestion class with the provided configuration.
+
+        Parameters
+        ----------
+        data_ingestion_config : DataIngestionConfig
+            Configuration for the data ingestion process.
+        """
         try:
             self.data_ingestion_config=data_ingestion_config
 
@@ -30,7 +61,17 @@ class DataIngestion:
         
     def export_collection_as_dataframe(self):
         """
-            Export the collection from the MongoDB as a dataframe
+        Exports a MongoDB collection as a pandas DataFrame.
+
+        Returns
+        -------
+        pd.DataFrame
+            A DataFrame containing the data from the MongoDB collection.
+        
+        Raises
+        ------
+        NetworkSecurityException
+            If an error occurs during the data export process.
         """
         try:
             database_name=self.data_ingestion_config.database_name
@@ -53,7 +94,22 @@ class DataIngestion:
     def export_data_into_feature_store(self, dataframe:pd.DataFrame):
 
         """
-            Export the dataframe into the feature store
+        Exports the DataFrame into the feature store.
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            The DataFrame to be exported.
+        
+        Returns
+        -------
+        pd.DataFrame
+            The same DataFrame after being exported.
+        
+        Raises
+        ------
+        NetworkSecurityException
+            If an error occurs during the export process.
         """
         try:
             feature_store_file_path=self.data_ingestion_config.feature_store_file_path
@@ -67,7 +123,19 @@ class DataIngestion:
             raise NetworkSecurityException(e, sys)
     
     def split_data_into_train_test(self, dataframe:pd.DataFrame):
-        
+        """
+        Splits the DataFrame into training and test datasets.
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            The DataFrame to be split.
+
+        Raises
+        ------
+        NetworkSecurityException
+            If an error occurs during the data splitting process.
+        """
 
         try:
             train_set, test_set = train_test_split(dataframe, 
@@ -92,6 +160,20 @@ class DataIngestion:
             raise NetworkSecurityException(e, sys)
    
     def initiate_data_ingestion(self):
+        """
+        Starts the data ingestion process by performing collection export,
+        exporting to the feature store, and splitting into training and test data.
+
+        Returns
+        -------
+        DataIngestionArtifact
+            An artifact containing file paths to the training and test datasets.
+
+        Raises
+        ------
+        NetworkSecurityException
+            If any error occurs during the ingestion process.
+        """
         try:
             ## Export the collection as a dataframe
             dataframe=self.export_collection_as_dataframe()
