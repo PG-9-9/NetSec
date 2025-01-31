@@ -51,11 +51,32 @@ templates=Jinja2Templates(directory="./templates")
 # Generic API home page
 @app.get("/", tags=["authentication"])
 async def index():
+    """
+    Redirects to the API documentation page.
+
+    Returns
+    -------
+    RedirectResponse
+        Redirects the user to the /docs page.
+    """
     return RedirectResponse(url="/docs")
 
 # API to train the model
 @app.get("/train")
 async def train_route():
+    """
+    Starts the training pipeline by running the `TrainingPipeline`.
+
+    Returns
+    -------
+    Response
+        A response indicating the success of the training pipeline execution.
+
+    Raises
+    ------
+    NetworkSecurityException
+        If any error occurs during the training process.
+    """
     try:
         train_pipeline=TrainingPipeline()
         train_pipeline.run_pipeline()
@@ -66,6 +87,26 @@ async def train_route():
 # API to predict the model   
 @app.post("/predict")
 async def predict_route(request: Request,file: UploadFile = File(...)):
+    """
+    Handles prediction by loading the model and preprocessing the input CSV file.
+
+    Parameters
+    ----------
+    request : Request
+        The FastAPI request object.
+    file : UploadFile
+        The CSV file containing the data for prediction.
+
+    Returns
+    -------
+    TemplateResponse
+        Renders an HTML page with the prediction results in a table format.
+
+    Raises
+    ------
+    NetworkSecurityException
+        If any error occurs during the prediction process.
+    """
     try:
         df=pd.read_csv(file.file)
         #print(df)

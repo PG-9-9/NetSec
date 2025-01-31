@@ -13,6 +13,26 @@ from datetime import datetime
 import sys
 
 if __name__=="__main__":
+    """
+    Main entry point for running the training pipeline components sequentially.
+    
+    It handles the entire pipeline starting from data ingestion to model training, 
+    logging the progress, and printing the artifacts at each stage.
+    
+    Methods
+    -------
+    start_data_ingestion():
+        Starts data ingestion and returns the data ingestion artifact.
+    
+    start_data_validation():
+        Starts data validation and returns the data validation artifact.
+    
+    start_data_transformation():
+        Starts data transformation and returns the data transformation artifact.
+    
+    start_model_trainer():
+        Starts model training and returns the model trainer artifact.
+    """
     try:
         trainingpipelineconfig=TrainingPipelineConfig()
         dataingestionconfig=DataIngestionConfig(trainingpipelineconfig)

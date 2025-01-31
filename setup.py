@@ -3,7 +3,17 @@ from typing import List
 
 def get_requirements()->List[str]:
     """
-    Get the requirements from the requirements.txt file
+        Reads the `requirements.txt` file and returns a list of required packages.
+
+        Returns
+        -------
+        List[str]
+            A list of package names required for the project.
+
+        Raises
+        ------
+        FileNotFoundError
+            If the `requirements.txt` file is not found.
     """
     requirement_lst:List[str]=[]
     try:
